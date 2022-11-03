@@ -1,7 +1,8 @@
-# Backend curso Angular Avanzado - Udemy
+# Backend curso Angular avanzado - Udemy
 
-No olvidar ejecutar
+No olvidar ejecutar 
+
 ```
-npm instal
+npm install
 ```
 para obtener node_modules
