@@ -1,6 +1,5 @@
 const { Schema, model } = require('mongoose');
 
-
 const UsuarioSchema = Schema({
 
     nombre: {
@@ -32,8 +31,8 @@ const UsuarioSchema = Schema({
 
 
 UsuarioSchema.method('toJSON', function() {
-    const { __v, _id, password, ...object } = this.toObject(); //extraigo de la instancia del objeto para que no se vea: v, id y passw
-    object.uid = _id; //le ponemos de nombre uid y ahora si se vera esa
+    const { __v, _id, password, ...object } = this.toObject();
+    object.uid = _id;
     return object;
 })
 

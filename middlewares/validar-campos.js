@@ -1,18 +1,18 @@
 const { response } = require('express');
 const { validationResult } = require('express-validator')
 
-const validarCampos = (req, res = response, next ) => { //next: continuar con el siguiente middleware
+const validarCampos = (req, res = response, next ) => {
 
-    const errores = validationResult( req ); //los errores generados en la ruta con check -> si esta vacio algun campo
+    const errores = validationResult( req );
 
-    if ( !errores.isEmpty() ) { //si no esta vacio = hay errores
+    if ( !errores.isEmpty() ) {
         return res.status(400).json({
             ok: false,
             errors: errores.mapped()
         });
     }
 
-    next(); //si no hay errores llamamos a la funcion next
+    next();
 }
 
 module.exports = {

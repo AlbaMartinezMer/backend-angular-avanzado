@@ -1,4 +1,4 @@
-const { response } = require('express'); //para que nos aparezca .status .json etc y nos ayude
+const { response } = require('express');
 const bcrypt = require('bcryptjs');
 
 const Usuario = require('../models/usuario');
@@ -7,11 +7,21 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async(req, res) => {
 
-    const usuarios = await Usuario.find({}, 'nombre email role google'); // {}=filtro, me interesa el resto de cosas: nombre email...
+    const desde = Number(req.query.desde) || 0;
+
+    const [ usuarios, total ] = await Promise.all([ //ejecuta todas las promesas: 1)usuarios 2)total
+        Usuario                                         //primera promesa
+            .find({}, 'nombre email role google img') //busca y muestra eso
+            .skip( desde )
+            .limit( 5 ),
+
+        Usuario.countDocuments()                        //segunda promesa
+    ]);
 
     res.json({
         ok: true,
-        usuarios
+        usuarios,
+        total
     });
 }
 
@@ -20,6 +30,7 @@ const crearUsuario = async(req, res = response) => {
     const { email, password } = req.body;
 
     try {
+
         const existeEmail = await Usuario.findOne({ email });
 
         if ( existeEmail ) {
@@ -33,7 +44,7 @@ const crearUsuario = async(req, res = response) => {
     
         // Encriptar contraseña
         const salt = bcrypt.genSaltSync();
-        usuario.password = bcrypt.hashSync( password, salt ); //la encripto y le mando el salt
+        usuario.password = bcrypt.hashSync( password, salt );
     
         // Guardar usuario
         await usuario.save();
@@ -43,7 +54,7 @@ const crearUsuario = async(req, res = response) => {
 
         res.json({
             ok: true,
-            usuario, //propiedad=variable
+            usuario,
             token
         });
 
@@ -55,6 +66,7 @@ const crearUsuario = async(req, res = response) => {
         });
     }
 }
+
 
 const actualizarUsuario = async (req, res = response) => {
 
@@ -74,9 +86,9 @@ const actualizarUsuario = async (req, res = response) => {
         }
 
         // Actualizaciones
-        const { password, google, email, ...campos } = req.body; //quiero todos los campos excepto passw google y email - se extraen
+        const { password, google, email, ...campos } = req.body;
 
-        if ( usuarioDB.email !== email ) { //si email DB != email nuevo escrito
+        if ( usuarioDB.email !== email ) {
 
             const existeEmail = await Usuario.findOne({ email });
             if ( existeEmail ) {
@@ -87,9 +99,9 @@ const actualizarUsuario = async (req, res = response) => {
             }
         }
         
-        campos.email = email; //si es != guardo el nuevo email
-        const usuarioActualizado = await Usuario.findByIdAndUpdate( uid, campos, { new: true } ); //buscar uid, pasando info de los campos, 
-                                                                            //que me regrese el nuevo resultado actualizado
+        campos.email = email;
+        const usuarioActualizado = await Usuario.findByIdAndUpdate( uid, campos, { new: true } );
+
         res.json({
             ok: true,
             usuario: usuarioActualizado
@@ -111,16 +123,16 @@ const borrarUsuario = async(req, res = response ) => {
 
     try {
 
-        const usuarioDB = await Usuario.findById( uid ); //--esto lo hemos copiado del update~
+        const usuarioDB = await Usuario.findById( uid );
 
         if ( !usuarioDB ) {
             return res.status(404).json({
                 ok: false,
                 msg: 'No existe un usuario por ese id'
             });
-        }                                               //~pues tenemos que verificar que existe el uid--
+        }
 
-        await Usuario.findByIdAndDelete( uid ); //si sí existe lo deleteamos - quizas queramos desactivarlos de la bbdd en vez de eliminarlos
+        await Usuario.findByIdAndDelete( uid );
 
         res.json({
             ok: true,
@@ -136,6 +148,8 @@ const borrarUsuario = async(req, res = response ) => {
         });
     }
 }
+
+
 
 module.exports = {
     getUsuarios,

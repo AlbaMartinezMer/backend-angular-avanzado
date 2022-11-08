@@ -14,9 +14,9 @@ const router = Router();
 
 router.get( '/', validarJWT , getUsuarios );
 
-router.post( '/', //aqui lo estamos creando, no es necesario jwt
+router.post( '/',
     [
-        check('nombre', 'El nombre es obligatorio').not().isEmpty(), //mensaje personalizado en vez de Invalid value
+        check('nombre', 'El nombre es obligatorio').not().isEmpty(),
         check('password', 'El password es obligatorio').not().isEmpty(),
         check('email', 'El email es obligatorio').isEmail(),
         validarCampos,
@@ -24,7 +24,7 @@ router.post( '/', //aqui lo estamos creando, no es necesario jwt
     crearUsuario 
 );
 
-router.put( '/:id', //le voy a pasar el id en la ruta
+router.put( '/:id',
     [
         validarJWT,
         check('nombre', 'El nombre es obligatorio').not().isEmpty(),

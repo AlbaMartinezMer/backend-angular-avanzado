@@ -10,6 +10,7 @@ const login = async( req, res = response ) => {
     const { email, password } = req.body;
 
     try {
+        
         // Verificar email
         const usuarioDB = await Usuario.findOne({ email });
 
@@ -19,17 +20,19 @@ const login = async( req, res = response ) => {
                 msg: 'Email no encontrado'
             });
         }
+
         // Verificar contraseña
         const validPassword = bcrypt.compareSync( password, usuarioDB.password );
-
         if ( !validPassword ) {
             return res.status(400).json({
                 ok: false,
                 msg: 'Contraseña no válida'
             });
         }
+
         // Generar el TOKEN - JWT
         const token = await generarJWT( usuarioDB.id );
+
 
         res.json({
             ok: true,
@@ -43,6 +46,8 @@ const login = async( req, res = response ) => {
             msg: 'Hable con el administrador'
         })
     }
+
+
 }
 
 
