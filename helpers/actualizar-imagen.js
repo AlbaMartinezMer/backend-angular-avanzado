@@ -1,14 +1,16 @@
 const Usuario = require('../models/usuario');
+const fs = require('fs');
+
 const Medico = require('../models/medico');
 const Hospital = require('../models/hospital');
 
-const fs = require('fs'); //filesystem: puedo leer las carpetas y archivos
-
 const borrarImagen = ( path ) => {
     if ( fs.existsSync( path ) ) {
-        fs.unlinkSync( path );    // borra la imagen anterior
+        // borrar la imagen anterior
+        fs.unlinkSync( path );
     }
 }
+
 
 const actualizarImagen = async(tipo, id, nombreArchivo) => {
 
@@ -16,7 +18,6 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
     
     switch( tipo ) {
         case 'medicos':
-
             const medico = await Medico.findById(id);
             if ( !medico ) {
                 console.log('No es un médico por id');
@@ -33,7 +34,6 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
         break;
         
         case 'hospitales':
-
             const hospital = await Hospital.findById(id);
             if ( !hospital ) {
                 console.log('No es un hospital por id');
@@ -66,6 +66,8 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
 
         break;
     }
+
+
 }
 
 

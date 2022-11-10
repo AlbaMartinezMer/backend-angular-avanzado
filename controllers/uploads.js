@@ -1,4 +1,4 @@
-const path = require('path'); //para construir path completo
+const path = require('path');
 const fs = require('fs');
 
 const { response } = require('express');
@@ -28,11 +28,11 @@ const fileUpload = ( req, res = response ) => {
         });
     }
 
-    // -- Procesar la imagen --
-    const file = req.files.imagen; //tengo acceso a los files gracias al middleware: expressFileUpload
+    // Procesar la imagen...
+    const file = req.files.imagen;
 
-    const nombreCortado = file.name.split('.'); // wolverine.1.3.jpg --> solo nos interesa el .jpg
-    const extensionArchivo = nombreCortado[ nombreCortado.length - 1 ]; //en la ultima posicion=jpg/png..
+    const nombreCortado = file.name.split('.'); // wolverine.1.3.jpg
+    const extensionArchivo = nombreCortado[ nombreCortado.length - 1 ];
     
     // Validar extension
     const extensionesValidas = ['png','jpg','jpeg','gif'];
@@ -44,7 +44,7 @@ const fileUpload = ( req, res = response ) => {
     }
 
     // Generar el nombre del archivo
-    const nombreArchivo = `${ uuidv4() }.${ extensionArchivo }`; //uuidv4 genera ids=nombre
+    const nombreArchivo = `${ uuidv4() }.${ extensionArchivo }`;
 
     // Path para guardar la imagen
     const path = `./uploads/${ tipo }/${ nombreArchivo }`;
@@ -59,7 +59,7 @@ const fileUpload = ( req, res = response ) => {
             });
         }
 
-        // Actualizar base de datos -> en /helpers
+        // Actualizar base de datos
         actualizarImagen( tipo, id, nombreArchivo );
 
         res.json({
@@ -68,17 +68,18 @@ const fileUpload = ( req, res = response ) => {
             nombreArchivo
         });
     });
+
 }
 
 
 const retornaImagen = ( req, res = response ) => {
 
     const tipo = req.params.tipo;
-    const foto = req.params.foto; //imagen.jpg
+    const foto = req.params.foto;
 
-    const pathImg = path.join( __dirname, `../uploads/${ tipo }/${ foto }` ); //unimos la ubicacion de la app desplegada 
-                                                                        //+ path de la imagen de mi proyecto, donde se encuentra la imagen de fs
-    // imagen por defecto si no existe el path
+    const pathImg = path.join( __dirname, `../uploads/${ tipo }/${ foto }` );
+
+    // imagen por defecto
     if ( fs.existsSync( pathImg ) ) {
         res.sendFile( pathImg );
     } else {

@@ -8,9 +8,9 @@ const Hospital = require('../models/hospital');
 const getTodo = async(req, res = response ) => {
 
     const busqueda = req.params.busqueda;
-    const regex = new RegExp( busqueda, 'i' ); //i=insensible ; lo que pongas en busqueda te lo buscara 
+    const regex = new RegExp( busqueda, 'i' );
 
-    const [ usuarios, medicos, hospitales ] = await Promise.all([   // si ponemos /todo/a buscara todos lo que tengan A
+    const [ usuarios, medicos, hospitales ] = await Promise.all([
         Usuario.find({ nombre: regex }),
         Medico.find({ nombre: regex }),
         Hospital.find({ nombre: regex }),
@@ -22,6 +22,7 @@ const getTodo = async(req, res = response ) => {
         medicos,
         hospitales
     })
+
 }
 
 const getDocumentosColeccion = async(req, res = response ) => {
@@ -46,6 +47,7 @@ const getDocumentosColeccion = async(req, res = response ) => {
 
         case 'usuarios':
             data = await Usuario.find({ nombre: regex });
+            
         break;
     
         default:
@@ -59,6 +61,7 @@ const getDocumentosColeccion = async(req, res = response ) => {
         ok: true,
         resultados: data
     })
+
 }
 
 

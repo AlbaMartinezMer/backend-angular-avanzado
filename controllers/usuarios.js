@@ -9,13 +9,13 @@ const getUsuarios = async(req, res) => {
 
     const desde = Number(req.query.desde) || 0;
 
-    const [ usuarios, total ] = await Promise.all([ //ejecuta todas las promesas: 1)usuarios 2)total
-        Usuario                                         //primera promesa
-            .find({}, 'nombre email role google img') //busca y muestra eso
+    const [ usuarios, total ] = await Promise.all([
+        Usuario
+            .find({}, 'nombre email role google img')
             .skip( desde )
-            .limit( 5 ),
+            .limit( 10 ),
 
-        Usuario.countDocuments()                        //segunda promesa
+        Usuario.countDocuments()
     ]);
 
     res.json({
@@ -74,6 +74,7 @@ const actualizarUsuario = async (req, res = response) => {
 
     const uid = req.params.id;
 
+
     try {
 
         const usuarioDB = await Usuario.findById( uid );
@@ -107,6 +108,7 @@ const actualizarUsuario = async (req, res = response) => {
             usuario: usuarioActualizado
         });
 
+        
     } catch (error) {
         console.log(error);
         res.status(500).json({
@@ -134,6 +136,7 @@ const borrarUsuario = async(req, res = response ) => {
 
         await Usuario.findByIdAndDelete( uid );
 
+        
         res.json({
             ok: true,
             msg: 'Usuario eliminado'
@@ -146,7 +149,10 @@ const borrarUsuario = async(req, res = response ) => {
             ok: false,
             msg: 'Hable con el administrador'
         });
+
     }
+
+
 }
 
 

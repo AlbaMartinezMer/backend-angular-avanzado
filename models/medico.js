@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 
 const MedicoSchema = Schema({
-
     nombre: {
         type: String,
         required: true
@@ -15,7 +14,7 @@ const MedicoSchema = Schema({
         required: true
     },
     hospital: {
-        type: Schema.Types.ObjectId,    //medicos asignados al hospital
+        type: Schema.Types.ObjectId,
         ref: 'Hospital',
         required: true
     },

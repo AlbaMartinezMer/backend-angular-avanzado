@@ -1,4 +1,5 @@
 /*
+
     ruta: api/uploads/
 */
 const { Router } = require('express');
@@ -10,9 +11,9 @@ const { fileUpload, retornaImagen } = require('../controllers/uploads');
 
 const router = Router();
 
-router.use( expressFileUpload() ); //middleware
+router.use( expressFileUpload() );
 
-router.put('/:tipo/:id', validarJWT , fileUpload ); //tipo=medico/usuario/hospital
+router.put('/:tipo/:id', validarJWT , fileUpload );
 
 router.get('/:tipo/:foto', retornaImagen );
 
